@@ -1,0 +1,104 @@
+<!--MyBookCollectionApp->POP UP-->
+<!--simple book management web application-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyBookCollectionApp</title>
+    <link rel="stylesheet" href="MyBookCollectionApp.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="navbar">
+      <h1>MyBookCollectionApp</h1>
+    </div>
+
+    <div class="container">
+      <div class="book-container">
+        <h2>Rich dad poor dad</h2>
+        <h5>Robert</h5>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui,
+          placeat? Suscipit autem beatae dolore ipsum quisquam cum itaque
+          reiciendis accusantium enim molestias praesentium vitae, nulla natus
+          deleniti aspernatur architecto. Earum?
+        </p>
+        <button onclick="deletebk(event)">Delete</button>
+      </div>
+    </div>
+
+    <div class="popupoverlay"></div>
+    <div class="popupbox">
+      <h2>Add book</h2>
+      <form>
+        <input type="text" placeholder="book title" id="bk-title-input" />
+        <input type="text" placeholder="book author" id="bk-author-input" />
+        <textarea
+          placeholder="short description"
+          id="bk-description-input"
+        ></textarea>
+        <button id="addbk">Add</button>
+        <button id="cancelpopup">Cancel</button>
+      </form>
+    </div>
+    <button class="add-button" id="add-popup-button">+</button>
+
+    <script>
+      //selecting poppoverlay,popupbox btn
+      var popupoverlay = document.querySelector(".popupoverlay");
+      var popupbox = document.querySelector(".popupbox");
+      var addpopupbutton = document.getElementById("add-popup-button");
+      addpopupbutton.addEventListener("click", function () {
+        popupoverlay.style.display = "block";
+        popupbox.style.display = "block";
+      });
+      //select cancel btn
+      var cancelpopup = document.getElementById("cancelpopup");
+      cancelpopup.addEventListener("click", function (event) {
+        event.preventDefault();
+        popupoverlay.style.display = "none";
+        popupbox.style.display = "none";
+
+        // Clear the input fields when canceling
+        booktitleinput.value = "";
+        bookauthorinput.value = "";
+        bookdescriptioninput.value = "";
+      });
+      //select container,addbk,book-title,author,description-i/p
+      var container = document.querySelector(".container");
+      var addbk = document.getElementById("addbk");
+      var booktitleinput = document.getElementById("bk-title-input");
+      var bookauthorinput = document.getElementById("bk-author-input");
+      var bookdescriptioninput = document.getElementById(
+        "bk-description-input"
+      );
+
+      addbk.addEventListener("click", function () {
+        event.preventDefault();
+        var div = document.createElement("div");
+        div.setAttribute("class", "book-container");
+        div.innerHTML = `<h2>${booktitleinput.value}</h2>
+        <h5>${bookauthorinput.value}</h5>
+        <p>${bookdescriptioninput.value}</p>
+        <button onclick="deletebk(event)">Delete</button>`; //template literals
+        container.append(div);
+        // Clear the input fields after adding a book
+        booktitleinput.value = "";
+        bookauthorinput.value = "";
+        bookdescriptioninput.value = "";
+
+        popupoverlay.style.display = "none";
+        popupbox.style.display = "none";
+      });
+      function deletebk(event) {
+        event.target.parentElement.remove();
+      }
+    </script>
+  </body>
+</html>
