@@ -1,5 +1,3 @@
-<!--MyBookCollectionApp->POP UP-->
-<!--simple book management web application-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,7 +18,7 @@
     </div>
 
     <div class="container">
-      <div class="book-container">
+      <div class="book-container" data-book-id="1">
         <h2>Rich dad poor dad</h2>
         <h5>Robert</h5>
         <p>
@@ -30,12 +28,14 @@
           deleniti aspernatur architecto. Earum?
         </p>
         <button onclick="deletebk(event)">Delete</button>
+        <button onclick="editbk(event)">Edit</button>
+        <!-- Edit Button -->
       </div>
     </div>
 
     <div class="popupoverlay"></div>
     <div class="popupbox">
-      <h2>Add book</h2>
+      <h2>Add or Edit Book</h2>
       <form>
         <input type="text" placeholder="book title" id="bk-title-input" />
         <input type="text" placeholder="book author" id="bk-author-input" />
@@ -50,15 +50,17 @@
     <button class="add-button" id="add-popup-button">+</button>
 
     <script>
-      //selecting poppoverlay,popupbox btn
       var popupoverlay = document.querySelector(".popupoverlay");
       var popupbox = document.querySelector(".popupbox");
       var addpopupbutton = document.getElementById("add-popup-button");
+
+      var currentEditElement = null; // To keep track of the book being edited
+
       addpopupbutton.addEventListener("click", function () {
         popupoverlay.style.display = "block";
         popupbox.style.display = "block";
       });
-      //select cancel btn
+
       var cancelpopup = document.getElementById("cancelpopup");
       cancelpopup.addEventListener("click", function (event) {
         event.preventDefault();
@@ -70,7 +72,7 @@
         bookauthorinput.value = "";
         bookdescriptioninput.value = "";
       });
-      //select container,addbk,book-title,author,description-i/p
+
       var container = document.querySelector(".container");
       var addbk = document.getElementById("addbk");
       var booktitleinput = document.getElementById("bk-title-input");
@@ -79,25 +81,59 @@
         "bk-description-input"
       );
 
-      addbk.addEventListener("click", function () {
+      addbk.addEventListener("click", function (event) {
         event.preventDefault();
-        var div = document.createElement("div");
-        div.setAttribute("class", "book-container");
-        div.innerHTML = `<h2>${booktitleinput.value}</h2>
-        <h5>${bookauthorinput.value}</h5>
-        <p>${bookdescriptioninput.value}</p>
-        <button onclick="deletebk(event)">Delete</button>`; //template literals
-        container.append(div);
-        // Clear the input fields after adding a book
+
+        if (currentEditElement) {
+          // Update the book if editing
+          currentEditElement.querySelector("h2").innerText =
+            booktitleinput.value;
+          currentEditElement.querySelector("h5").innerText =
+            bookauthorinput.value;
+          currentEditElement.querySelector("p").innerText =
+            bookdescriptioninput.value;
+
+          currentEditElement = null; // Reset the current edit element
+        } else {
+          // Add new book if not editing
+          var div = document.createElement("div");
+          div.setAttribute("class", "book-container");
+          div.innerHTML = `<h2>${booktitleinput.value}</h2>
+          <h5>${bookauthorinput.value}</h5>
+          <p>${bookdescriptioninput.value}</p>
+          <button onclick="deletebk(event)">Delete</button>
+          <button onclick="editbk(event)">Edit</button>`; // template literals
+          container.append(div);
+        }
+
+        // Clear the input fields
         booktitleinput.value = "";
         bookauthorinput.value = "";
         bookdescriptioninput.value = "";
 
+        // Hide the popup
         popupoverlay.style.display = "none";
         popupbox.style.display = "none";
       });
+
       function deletebk(event) {
         event.target.parentElement.remove();
+      }
+
+      function editbk(event) {
+        // Get the book to edit
+        currentEditElement = event.target.parentElement;
+
+        // Fill the form with the current book values
+        booktitleinput.value = currentEditElement.querySelector("h2").innerText;
+        bookauthorinput.value =
+          currentEditElement.querySelector("h5").innerText;
+        bookdescriptioninput.value =
+          currentEditElement.querySelector("p").innerText;
+
+        // Open the popup to edit the book
+        popupoverlay.style.display = "block";
+        popupbox.style.display = "block";
       }
     </script>
   </body>
